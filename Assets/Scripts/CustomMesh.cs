@@ -13,11 +13,10 @@ public class CustomMesh : MonoBehaviour
     public float nBreadth = 20f;
     public float nWidth = 10f;
 
-    public int noiseScale = 2;
-
+    int noiseScale = 2;
     Mesh mesh;
     Vector3[] vertices;
-    int[] trinagles;
+    int[] triangles;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,42 +39,46 @@ public class CustomMesh : MonoBehaviour
     void CreateShape(){
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
 
+        int dSize = 4;
+
+        float scale = 0.8f;
         for(int i = 0, z = 0; z <= zSize; z++){
+            float scaleScale = xSize/2;
+
             for (int x = 0; x <= xSize; x++){
-
-                float y = Mathf.PerlinNoise(x * 0.3f, z * 0.3f) * noiseScale;
-
-                vertices[i] = new Vector3(x, y, z);
-                // if( x > 16 && x < 24) {
-                //     // vertices[i] = new Vector3(x, 0, z);
-                //     noiseScale = 0;
-                // }
-
-                if(x < 16){
-                    if(noiseScale > 0 )
-                        noiseScale--;
+                if(x < xSize/2 - dSize){
+                    scale = 0.8f;
+                    scaleScale--;
                 }
-                else if(x > 24){
-                        noiseScale++;
+                else if(x > xSize/2 + dSize){
+                        scale = 0.8f;
+                        scaleScale++;
                 }
                 else{
-                    noiseScale = 0;
+                    scale = 0.1f;
                 }
 
+                float y = Mathf.PerlinNoise(x * 0.2f, z * 0.2f) * scaleScale * scale;
+
+                vertices[i] = new Vector3(x, y, z);
                 i++;
             }
         }
-        trinagles = new int[xSize * zSize * 6];
+
+
+
+
+        triangles = new int[xSize * zSize * 6];
         int vert = 0;
         int tris = 0;
         for(int z = 0; z < zSize; z++){
             for(int x = 0; x < xSize; x++){
-                trinagles[tris + 0] = vert + 0;
-                trinagles[tris + 1] = vert + xSize + 1;
-                trinagles[tris + 2] = vert + 1;
-                trinagles[tris + 3] = vert + 1;
-                trinagles[tris + 4] = vert + xSize + 1;
-                trinagles[tris + 5] = vert + xSize + 2;
+                triangles[tris + 0] = vert + 0;
+                triangles[tris + 1] = vert + xSize + 1;
+                triangles[tris + 2] = vert + 1;
+                triangles[tris + 3] = vert + 1;
+                triangles[tris + 4] = vert + xSize + 1;
+                triangles[tris + 5] = vert + xSize + 2;
 
                 vert++;
                 tris += 6;
@@ -87,7 +90,7 @@ public class CustomMesh : MonoBehaviour
     void UpdateMesh(){
         mesh.Clear();
         mesh.vertices = vertices;
-        mesh.triangles = trinagles;
+        mesh.triangles = triangles;
 
         mesh.RecalculateNormals();
     }

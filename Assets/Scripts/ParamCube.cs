@@ -17,6 +17,5 @@ public class ParamCube : MonoBehaviour
     void Update()
     {
         transform.localScale = new Vector3(transform.localScale.x, (AudioSpectrum.bandBuff[band] * scaleMultiplier ) + startScale, transform.localScale.z);
-        transform.position = new Vector3(transform.position.x, ((AudioSpectrum.bandBuff[band] * scaleMultiplier ) + startScale) / 2, transform.position.z);
     }
 }
